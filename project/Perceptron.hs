@@ -8,6 +8,7 @@ module Perceptron
     , T.Example
     , T.Weights
     , T.TrainingSet
+    , T.TrainingConfiguration(..)
     ) where
 
 import qualified Train as T
@@ -26,7 +27,7 @@ predict perceptron input
     where
         weights = getWeights perceptron
 
-fit :: T.TrainingSet -> T.Weights -> Float -> Perceptron
-fit trainingSet initialWeights threshold = Perceptron weights
+fit :: T.TrainingSet -> T.TrainingConfiguration -> Perceptron
+fit trainingSet conf = Perceptron weights
     where
-        weights = T.fit trainingSet initialWeights threshold
+        weights = T.fit trainingSet conf
