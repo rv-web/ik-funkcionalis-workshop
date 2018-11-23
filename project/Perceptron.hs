@@ -1,3 +1,15 @@
+module Perceptron 
+    ( predict
+    , fit
+    , Perceptron
+    , getWeights
+    , Label
+    , Input
+    , Example
+    , Weights
+    , TrainingSet
+    ) where
+
 type Label = Float
 type Input = [Float]
 type Example = (Input, Label)
