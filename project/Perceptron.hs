@@ -34,9 +34,9 @@ epoch trainingSet initialWeights = (adjustedWeights, delta)
         diff = zipWith (-) initialWeights adjustedWeights
         delta = sqrt $ dot diff diff
 
-train :: TrainingSet -> Weights -> Float -> Perceptron
-train trainingSet initialWeights threshold
+fit :: TrainingSet -> Weights -> Float -> Perceptron
+fit trainingSet initialWeights threshold
     | delta <= threshold = Perceptron adjustedWeights
-    | otherwise = train trainingSet adjustedWeights threshold
+    | otherwise = fit trainingSet adjustedWeights threshold
     where
         (adjustedWeights, delta) = epoch trainingSet initialWeights
