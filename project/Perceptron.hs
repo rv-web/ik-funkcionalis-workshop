@@ -14,8 +14,15 @@ import qualified Train as T
 
 newtype Perceptron = Perceptron { getWeights :: [Float] } deriving (Show)
 
-predict :: Perceptron -> T.Input -> T.Label
-predict perceptron input = T.predict weights input
+matchingDimensions :: T.Input -> T.Weights -> Bool
+matchingDimensions input weights = inputAndBias == length weights
+    where
+        inputAndBias = 1 + length input
+
+predict :: Perceptron -> T.Input -> Maybe T.Label
+predict perceptron input
+    | matchingDimensions input weights = Just $ T.predict weights input
+    | otherwise                        = Nothing
     where
         weights = getWeights perceptron
 
