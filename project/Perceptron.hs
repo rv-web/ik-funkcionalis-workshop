@@ -3,52 +3,23 @@ module Perceptron
     , fit
     , Perceptron
     , getWeights
-    , Label
-    , Input
-    , Example
-    , Weights
-    , TrainingSet
+    , T.Label
+    , T.Input
+    , T.Example
+    , T.Weights
+    , T.TrainingSet
     ) where
 
-type Label = Float
-type Input = [Float]
-type Example = (Input, Label)
-type Weights = [Float]
-type TrainingSet = [Example]
+import qualified Train as T
 
 newtype Perceptron = Perceptron { getWeights :: [Float] } deriving (Show)
 
-dot :: [Float] -> [Float] -> Float
-dot a b = sum $ zipWith (*) a b
-
-predict :: Perceptron -> Input -> Label
-predict perceptron input
-    | angle < 0 = -1
-    | otherwise = 1
+predict :: Perceptron -> T.Input -> T.Label
+predict perceptron input = T.predict weights input
     where
-        angle = dot (1 : input) $ getWeights perceptron
+        weights = getWeights perceptron
 
-adjustWeights :: Example -> Weights -> Weights
-adjustWeights (input, expected) weights
-    | prediction == expected = weights
-    | otherwise = updatedWeights
+fit :: T.TrainingSet -> T.Weights -> Float -> Perceptron
+fit trainingSet initialWeights threshold = Perceptron weights
     where
-        prediction = predict (Perceptron weights) input
-        learningRate = 0.1
-        mul = learningRate * (-prediction)
-        scaledSample = map (mul *) (1.0 : input)
-        updatedWeights = zipWith (+) weights scaledSample
-
-epoch :: TrainingSet -> Weights -> (Weights, Float)
-epoch trainingSet initialWeights = (adjustedWeights, delta)
-    where
-        adjustedWeights = foldl (\weights example -> adjustWeights example weights) initialWeights trainingSet
-        diff = zipWith (-) initialWeights adjustedWeights
-        delta = sqrt $ dot diff diff
-
-fit :: TrainingSet -> Weights -> Float -> Perceptron
-fit trainingSet initialWeights threshold
-    | delta <= threshold = Perceptron adjustedWeights
-    | otherwise = fit trainingSet adjustedWeights threshold
-    where
-        (adjustedWeights, delta) = epoch trainingSet initialWeights
+        weights = T.fit trainingSet initialWeights threshold
