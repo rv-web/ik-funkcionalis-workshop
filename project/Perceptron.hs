@@ -4,22 +4,24 @@ type Example = (Input, Label)
 type Weights = [Float]
 type TrainingSet = [Example]
 
+newtype Perceptron = Perceptron { getWeights :: [Float] } deriving (Show)
+
 dot :: [Float] -> [Float] -> Float
 dot a b = sum $ zipWith (*) a b
 
-predict :: Input -> Weights -> Label
-predict input weights
+predict :: Perceptron -> Input -> Label
+predict perceptron input
     | angle < 0 = -1
     | otherwise = 1
     where
-        angle = dot (1 : input) weights
+        angle = dot (1 : input) $ getWeights perceptron
 
 adjustWeights :: Example -> Weights -> Weights
 adjustWeights (input, expected) weights
     | prediction == expected = weights
     | otherwise = updatedWeights
     where
-        prediction = predict input weights
+        prediction = predict (Perceptron weights) input
         learningRate = 0.1
         mul = learningRate * (-prediction)
         scaledSample = map (mul *) (1.0 : input)
@@ -32,9 +34,9 @@ epoch trainingSet initialWeights = (adjustedWeights, delta)
         diff = zipWith (-) initialWeights adjustedWeights
         delta = sqrt $ dot diff diff
 
-train :: TrainingSet -> Weights -> Float -> Weights
+train :: TrainingSet -> Weights -> Float -> Perceptron
 train trainingSet initialWeights threshold
-    | delta <= threshold = adjustedWeights
+    | delta <= threshold = Perceptron adjustedWeights
     | otherwise = train trainingSet adjustedWeights threshold
     where
         (adjustedWeights, delta) = epoch trainingSet initialWeights
