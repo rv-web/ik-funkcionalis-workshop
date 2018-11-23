@@ -25,6 +25,10 @@ library
       Perceptron
   other-modules:
       Paths_Perceptron
+      Perceptron.Fit
+      Perceptron.Predict
+      Perceptron.Types
+      Perceptron.Util
   hs-source-dirs:
       src
   build-depends:
