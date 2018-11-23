@@ -25,6 +25,7 @@ library
       Perceptron
   other-modules:
       Paths_Perceptron
+      Perceptron.Evaluate
       Perceptron.Fit
       Perceptron.Predict
       Perceptron.Types
